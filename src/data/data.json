@@ -1,0 +1,266 @@
+[
+    {
+        "title": "Maimun Palace",
+        "location": {
+            "lat": 3.5756,
+            "lon": 98.6873
+        },
+        "image": "https://example.com/images/maimun_palace.jpg"
+    },
+    {
+        "title": "Tjong A Fie Mansion",
+        "location": {
+            "lat": 3.5931,
+            "lon": 98.6854
+        },
+        "image": "https://example.com/images/tjong_a_fie_mansion.jpg"
+    },
+    {
+        "title": "Medan Grand Mosque",
+        "location": {
+            "lat": 3.5788,
+            "lon": 98.6865
+        },
+        "image": "https://example.com/images/medan_grand_mosque.jpg"
+    },
+    {
+        "title": "Rahmat International Wildlife Museum & Gallery",
+        "location": {
+            "lat": 3.5898,
+            "lon": 98.6658
+        },
+        "image": "https://example.com/images/rahmat_museum.jpg"
+    },
+    {
+        "title": "Merdeka Walk",
+        "location": {
+            "lat": 3.5890,
+            "lon": 98.6756
+        },
+        "image": "https://example.com/images/merdeka_walk.jpg"
+    },
+    {
+        "title": "Lake Siombak",
+        "location": {
+            "lat": 3.6801,
+            "lon": 98.6312
+        },
+        "image": "https://example.com/images/lake_siombak.jpg"
+    },
+    {
+        "title": "Taman Ahmad Yani",
+        "location": {
+            "lat": 3.5817,
+            "lon": 98.6748
+        },
+        "image": "https://example.com/images/taman_ahmad_yani.jpg"
+    },
+    {
+        "title": "Istana Maimun Park",
+        "location": {
+            "lat": 3.5755,
+            "lon": 98.6879
+        },
+        "image": "https://example.com/images/istana_maimun_park.jpg"
+    },
+    {
+        "title": "Hillpark Sibolangit",
+        "location": {
+            "lat": 3.3285,
+            "lon": 98.5223
+        },
+        "image": "https://example.com/images/hillpark_sibolangit.jpg"
+    },
+    {
+        "title": "Taman Cadika Pramuka",
+        "location": {
+            "lat": 3.6425,
+            "lon": 98.6931
+        },
+        "image": "https://example.com/images/taman_cadika_pramuka.jpg"
+    },
+    {
+        "title": "Graha Maria Annai Velangkanni",
+        "location": {
+            "lat": 3.5991,
+            "lon": 98.6286
+        },
+        "image": "https://example.com/images/graha_maria_annai.jpg"
+    },
+    {
+        "title": "Upside Down World Medan",
+        "location": {
+            "lat": 3.5789,
+            "lon": 98.6781
+        },
+        "image": "https://example.com/images/upside_down_world.jpg"
+    },
+    {
+        "title": "Taman Beringin",
+        "location": {
+            "lat": 3.5936,
+            "lon": 98.6678
+        },
+        "image": "https://example.com/images/taman_beringin.jpg"
+    },
+    {
+        "title": "Masjid Al-Osmani",
+        "location": {
+            "lat": 3.6475,
+            "lon": 98.7014
+        },
+        "image": "https://example.com/images/masjid_al_osmani.jpg"
+    },
+    {
+        "title": "Vihara Gunung Timur",
+        "location": {
+            "lat": 3.5831,
+            "lon": 98.6693
+        },
+        "image": "https://example.com/images/vihara_gunung_timur.jpg"
+    },
+    {
+        "title": "Sun Plaza",
+        "location": {
+            "lat": 3.5905,
+            "lon": 98.6751
+        },
+        "image": "https://example.com/images/sun_plaza.jpg"
+    },
+    {
+        "title": "Podomoro City Deli Medan",
+        "location": {
+            "lat": 3.5909,
+            "lon": 98.6768
+        },
+        "image": "https://example.com/images/podomoro_city.jpg"
+    },
+    {
+        "title": "Masjid Raya Al Mashun",
+        "location": {
+            "lat": 3.5785,
+            "lon": 98.6862
+        },
+        "image": "https://example.com/images/masjid_al_mashun.jpg"
+    },
+    {
+        "title": "Sosro Bahagia Park",
+        "location": {
+            "lat": 3.5922,
+            "lon": 98.6749
+        },
+        "image": "https://example.com/images/sosro_bahagia_park.jpg"
+    },
+    {
+        "title": "Selat Panjang Street",
+        "location": {
+            "lat": 3.5844,
+            "lon": 98.6881
+        },
+        "image": "https://example.com/images/selat_panjang_street.jpg"
+    },
+    {
+        "title": "Sibolangit Waterfall",
+        "location": {
+            "lat": 3.3190,
+            "lon": 98.5212
+        },
+        "image": "https://example.com/images/sibolangit_waterfall.jpg"
+    },
+    {
+        "title": "Deli Park Mall",
+        "location": {
+            "lat": 3.5907,
+            "lon": 98.6762
+        },
+        "image": "https://example.com/images/deli_park_mall.jpg"
+    },
+    {
+        "title": "Titi Gantung Medan",
+        "location": {
+            "lat": 3.5963,
+            "lon": 98.6725
+        },
+        "image": "https://example.com/images/titi_gantung.jpg"
+    },
+    {
+        "title": "Centre Point Mall",
+        "location": {
+            "lat": 3.5989,
+            "lon": 98.6752
+        },
+        "image": "https://example.com/images/centre_point_mall.jpg"
+    },
+    {
+        "title": "One Heart Community Church",
+        "location": {
+            "lat": 3.5890,
+            "lon": 98.6821
+        },
+        "image": "https://example.com/images/one_heart_church.jpg"
+    },
+    {
+        "title": "Green Hill City",
+        "location": {
+            "lat": 3.3265,
+            "lon": 98.5247
+        },
+        "image": "https://example.com/images/green_hill_city.jpg"
+    },
+    {
+        "title": "Kampung Keling (Little India)",
+        "location": {
+            "lat": 3.5854,
+            "lon": 98.6853
+        },
+        "image": "https://example.com/images/kampung_keling.jpg"
+    },
+    {
+        "title": "Lapangan Merdeka",
+        "location": {
+            "lat": 3.5891,
+            "lon": 98.6755
+        },
+        "image": "https://example.com/images/lapangan_merdeka.jpg"
+    },
+    {
+        "title": "Binjai Supermall",
+        "location": {
+            "lat": 3.6083,
+            "lon": 98.4868
+        },
+        "image": "https://example.com/images/binjai_supermall.jpg"
+    },
+    {
+        "title": "Istana Maimun",
+        "location": {
+            "lat": 3.5756,
+            "lon": 98.6873
+        },
+        "image": "https://example.com/images/istana_maimun.jpg"
+    },
+    {
+        "title": "Mikie Funland",
+        "location": {
+            "lat": 3.3037,
+            "lon": 98.5108
+        },
+        "image": "https://example.com/images/mikie_funland.jpg"
+    },
+    {
+        "title": "Buddhist Temple Maha Vihara Maitreya",
+        "location": {
+            "lat": 3.6088,
+            "lon": 98.6466
+        },
+        "image": "https://example.com/images/vihara_maitreya.jpg"
+    },
+    {
+        "title": "Sri Mariamman Temple",
+        "location": {
+            "lat": 3.5889,
+            "lon": 98.6837
+        },
+        "image": "https://example.com/images/sri_mariamman_temple.jpg"
+    }
+]
