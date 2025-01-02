@@ -393,12 +393,12 @@ function App() {
       <main className="flex-1 p-4 pt-20 pb-20">
         {isMapView ? (
           <div className="grid grid-cols-1 md:grid-cols-2">
-            <div className="w-full h-[400px] z-0 md:h-full">
+            <div className="w-full h-[400px] z-0 md:h-screen">
               <MapContainer
                 center={[currentLocation.lat, currentLocation.lon]}
                 zoom={10}
                 ref={mapRef}
-                className="w-full h-[400px] md:h-full"
+                className="w-full h-[400px] md:h-screen"
               >
                 <MapEventHandler />
                 <TileLayer
