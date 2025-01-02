@@ -7,7 +7,6 @@ import { MdOutlineVilla } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 
 export default function Navbar({
-  onSearch,
   setListings,
   isMapview,
   listingPerPage,

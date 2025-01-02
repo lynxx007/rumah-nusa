@@ -9,5 +9,8 @@ export const db = create({
     listing_id: "string",
   },
 });
-//@ts-ignore
-await insertMultiple(db, newData);
+async function insertData() {
+  //@ts-ignore
+  await insertMultiple(db, newData);
+}
+insertData().then(() => console.log("Data inserted"));

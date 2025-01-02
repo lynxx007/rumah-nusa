@@ -16,6 +16,14 @@ interface Listing {
   title: string;
   image: string;
   size: string;
+  document: document;
+}
+interface document {
+  location: {
+    lat: number;
+    lon: number;
+  }
+  title: string;
 }
 
 interface MapProps {
@@ -85,7 +93,7 @@ function LocationLogger({
   setIsMapMoving: React.Dispatch<React.SetStateAction<boolean>>;
   setZoom: React.Dispatch<React.SetStateAction<number>>;
 }) {
-  const timeoutRef = useRef<NodeJS.Timeout>();
+  const timeoutRef = useRef<any>();
 
   useMapEvents({
     movestart: () => {
