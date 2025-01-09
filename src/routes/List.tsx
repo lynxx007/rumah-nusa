@@ -28,6 +28,7 @@ import {
   useMapEvents,
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
+import { formatPriceToIdr } from "../lib/formatPrice";
 export default function List() {
   let { id } = useParams();
   const [data, setData] = useState<any>({});
@@ -53,8 +54,8 @@ export default function List() {
     <div className="flex flex-col min-h-screen">
       <Navbar />
       {data.document !== undefined ? (
-        <main className="flex flex-col p-4 md:p-16 pt-40 pb-20">
-          <div className="flex w-full items-center justify-end  md:justify-center space-x-4">
+        <main className="flex flex-col p-4 md:p-16 pt-32 pb-20">
+          <div className="pt-0 md:pt-8 flex w-full items-center justify-end  md:justify-center space-x-4">
             <h1 className="text-md font-bold hidden md:block">
               {data.document.market_title}
             </h1>
@@ -231,9 +232,9 @@ export default function List() {
         </main>
       )}
       {data.document !== undefined && (
-        <footer className="md:hidden flex justify-between items-center space-x-16 fixed bottom-0 left-0 w-full bg-gray-200 text-center text-red-300 p-4 z-10">
+        <footer className="flex justify-between items-center space-x-16 fixed bottom-0 left-0 w-full bg-gray-200 text-center text-red-300 p-4 z-10">
           <div className="flex flex-row space-x-4">
-            <h1 className="font-bold ">Rp {data.document.price}</h1>
+            <h1 className="font-bold">{formatPriceToIdr(data.document.price)}</h1>
           </div>
           <div>
             <button className="bg-red-500 text-white rounded-full p-4">

@@ -513,11 +513,11 @@ function App() {
               Page {currentPage} of {totalPages}
             </div>
           </>
-        ) : (
-          <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-32 w-32 border-t-4 border-primary"></div>
+        ) : listings.length === 0 ? (
+          <div className="flex items-center justify-center h-screen">
+            <h2 className="text-2xl font-bold mb-4">No listings found</h2>
           </div>
-        )}
+        ) : null}
         <button
           onClick={() => setIsMapView(!isMapView)}
           className={`fixed bottom-24 md:bottom-6 right-6 z-50 bg-primary text-white bg-black 
@@ -545,7 +545,7 @@ function App() {
           </div>
         </button>
       </main>
-      <footer className="md:hidden flex justify-center items-center space-x-16 fixed bottom-0 left-0 w-full bg-white text-center text-red-300 p-4 z-10">
+      {/* <footer className="md:hidden flex justify-center items-center space-x-16 fixed bottom-0 left-0 w-full bg-white text-center text-red-300 p-4 z-10">
         <a
           href="/"
           className="text-sm font-semibold flex flex-col items-center"
@@ -564,7 +564,7 @@ function App() {
         >
           <CircleUser /> Log in
         </a>
-      </footer>
+      </footer> */}
     </div>
   );
 }

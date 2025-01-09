@@ -5,7 +5,7 @@ import { db } from "../lib/orama";
 import { FaHouse } from "react-icons/fa6";
 import { MdOutlineVilla } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
-
+import { FcHome } from "react-icons/fc";
 export default function Navbar({
   setListings,
   isMapview,
@@ -91,16 +91,14 @@ export default function Navbar({
         <div className="flex items-center justify-between max-w-7xl mx-auto">
           {/* Logo */}
           <div className="flex items-center space-x-2">
-            <img
-              src={
-                "https://th.bing.com/th/id/OIP.h7XeAZB8m0tydtSzecgD4wAAAA?rs=1&pid=ImgDetMain"
-              }
-              alt="Airbnb Logo"
-              className="h-8 w-8"
-            />
+            <a
+              href="/"
+              className="text-[#FF5A5F] font-bold text-xl flex gap-1 items-center"
+            ><FaHouse color="#FF5A5F" size={20} />
             <span className="text-[#FF5A5F] font-bold text-xl hidden md:block">
               Rumahnusa
             </span>
+            </a>
           </div>
 
           {/* Search Bar */}
@@ -115,6 +113,7 @@ export default function Navbar({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="outline-none bg-transparent w-full text-sm"
+              autoFocus={false}
               // onKeyDown={(e) => {
               //   if (e.key === "Enter") setListings} }
             />
