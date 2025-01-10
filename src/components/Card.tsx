@@ -85,7 +85,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
         <div className="px-6 py-4">
           <div className="flex justify-between items-start mb-2">
             <div>
-              <h2 className="font-bold text-xl mb-1">{title}</h2>
+              <h2 className="font-bold text-xs mb-1">{title}</h2>
               <p className="text-gray-600 text-sm">
                 {/* {description.slice(0, 40) + "..."} */}
               </p>
@@ -98,7 +98,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
             </div>
           </div>
           <p className="text-gray-700 text-sm mb-2">{dates}</p>
-          <p className="text-gray-900 font-bold mb-2">
+          <p className="text-gray-900 font-bold text-xs mb-2">
             Rp{price.toLocaleString()}
           </p>
           <div className="flex items-center space-x-4 text-sm text-gray-600">
