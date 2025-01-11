@@ -12,6 +12,8 @@ export default function Navbar({
   listingPerPage,
   currentPage,
   setTotalPage,
+  onFirstResult,
+  setIsMapView
 }: {
   onSearch?: any;
   setListings?: any;
@@ -19,26 +21,111 @@ export default function Navbar({
   listingPerPage?: number;
   currentPage?: number;
   setTotalPage?: any;
+  onFirstResult?: (lat: number, lng: number) => void;
+  setIsMapView?: (value: boolean) => void;
 }) {
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
 
   const [suggestions, setSuggestions] = useState<any[]>([]);
+  const [suggestions2, setSuggestions2] = useState<any[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [showSuggestions2, setShowSuggestions2] = useState(false);
+  const [apiData,setApiData] = useState([])
   // Ref for the search input and suggestions container
   const searchContainerRef = useRef<HTMLDivElement>(null);
 
   const getData = async (query: string) => {
+    
+    // const res = await fetch('http://localhost:8000/v1/api/search?searchTerm=' + query);
+    // const data = await res.json();
+    const apiRes = await fetch(`https://nominatim.openstreetmap.org/search?q=${query}, Indonesia&format=json`)
+    const apiData = await apiRes.json();
+    setApiData(apiData)
+    console.log(apiData);
     const data = await search(db, {
       term: query,
       limit: listingPerPage,
+      properties: ['location_address','market_title']
     });
-    // const res = await fetch('http://localhost:8000/v1/api/search?searchTerm=' + query);
-    // const data = await res.json();
+    // setLandmarkSuggestion(apiData);
     setSuggestions(data.hits);
     setShowSuggestions(true);
-    setListings(data.hits);
-    setTotalPage(Math.ceil(data.count / listingPerPage));
+    if (apiData.length === 0){
+      return
+    }
+
+    const res = await search(db, {
+        limit: 1000,
+        where: {
+          _geoloc: {
+            radius: {
+              coordinates: {
+                lat: Number(apiData[0].lat),
+                lon: Number(apiData[0].lon),
+              },
+              value: 1,
+              unit: "km",
+              inside: true,
+            },
+          }, 
+        },
+      });
+      console.log(res.hits);
+      setSuggestions2(res.hits);
+      setShowSuggestions2(true);
+      setListings(res.hits);
+      setTotalPage(Math.ceil(res.count / listingPerPage));
+   
+    if (res.hits.length > 0 && res.hits[0].document._geoloc) {
+      // Center map on first result
+      onFirstResult?.(
+        res.hits[0].document._geoloc.lat,
+        res.hits[0].document._geoloc.lon
+      );
+    }
+
+    // setListings(data.hits);
+    // setTotalPage(Math.ceil(data.count / listingPerPage));
+
+   
+    
+    // else{
+    //   const res = await search(db, {
+    //     limit: 1000,
+    //     where: {
+    //       _geoloc: {
+    //         radius: {
+    //           coordinates: {
+    //             lat: Number(apiData[0].lat),
+    //             lon: Number(apiData[0].lon),
+    //           },
+    //           value: 1,
+    //           unit: "km",
+    //           inside: true,
+    //         },
+    //       }, 
+    //     },
+    //   });
+    //   setSuggestions(res.hits);
+    //   setLandmarkSuggestion(apiData);
+    //   setShowSuggestions(true);
+    //   setListings(res.hits);
+    //   setTotalPage(Math.ceil(res.count / listingPerPage));
+
+    //   if (res.hits.length > 0 && res.hits[0].document._geoloc) {
+    //     // Center map on first result
+    //     onFirstResult?.(
+    //       // res.hits[0].document._geoloc.lat,
+    //       // res.hits[0].document._geoloc.lon
+    //       Number(apiData[0].lat),
+    //       Number(apiData[0].lon)
+    //     );
+    //      // Enable map view
+    //      setIsMapView?.(true);
+    //   }
+    // }
+    
   };
 
   useEffect(() => {
@@ -53,6 +140,10 @@ export default function Navbar({
   return () => clearTimeout(delayDebounceFn);
   }, [searchQuery]);
 
+  // useEffect(() => {
+  //   const url = 'https://nominatim.openstreetmap.org/search?q=Taman anggrek, Indonesi&format=json'
+  // },[])
+
   // Effect to handle clicks outside of the search container
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -62,6 +153,7 @@ export default function Navbar({
         !searchContainerRef.current.contains(event.target as Node)
       ) {
         setShowSuggestions(false);
+        setShowSuggestions2(false);
       }
     };
 
@@ -103,9 +195,7 @@ export default function Navbar({
 
           {/* Search Bar */}
           <div
-            className={`flex items-center border rounded-full shadow-sm hover:shadow-md transition-all duration-300 py-2 px-4 space-x-4 ${
-              isMapview && "hidden"
-            }`}
+            className={`flex items-center border rounded-full shadow-sm hover:shadow-md transition-all duration-300 py-2 px-4 space-x-4`}
           >
             <input
               type="text"
@@ -114,6 +204,9 @@ export default function Navbar({
               onChange={(e) => setSearchQuery(e.target.value)}
               className="outline-none bg-transparent w-full text-sm"
               autoFocus={false}
+              onFocus={()=>{
+                setIsMapView(true)
+              }}
               // onKeyDown={(e) => {
               //   if (e.key === "Enter") setListings} }
             />
@@ -143,28 +236,48 @@ export default function Navbar({
         </div>
       </nav>
 
-      {/* Suggestions dropdown */}
       {showSuggestions && suggestions.length > 0 && (
-        <div
-          className="fixed top-24 left-1/2 transform -translate-x-1/2 w-[400px] max-h-[300px] 
+  <div className="absolute top-12 left-1/2 transform -translate-x-1/2 w-[400px] max-h-[150px] overflow-y-auto bg-white rounded-lg shadow-2xl z-[1000] mt-2 border">
+    {suggestions.map((suggestion: any, index: number) => (
+      <button
+        key={index}
+        className="w-full px-4 py-3 text-left hover:bg-gray-100 transition-colors duration-150 border-b last:border-b-0"
+        onClick={() => handleSuggestionClick(suggestion)}
+      >
+        <p className="text-sm text-gray-800 font-medium truncate">
+          {suggestion.document.market_title}
+        </p>
+        <p className="text-xs text-gray-500 mt-1">
+          {suggestion.document.location_address}
+        </p>
+      </button>
+    ))}
+  </div>
+)}
+
+{/* Suggestions dropdown */}
+{showSuggestions2 && suggestions2.length > 0 && (
+  <div
+    className="absolute top-52 left-1/2 transform -translate-x-1/2 w-[400px] max-h-[300px] 
     overflow-y-auto bg-white rounded-lg shadow-2xl z-[1000] mt-2 border"
-        >
-          {suggestions.map((suggestion: any, index: number) => (
-            <button
-              key={index}
-              onClick={() => handleSuggestionClick(suggestion)}
-              className="w-full px-4 py-3 text-left hover:bg-gray-100 transition-colors duration-150 border-b last:border-b-0"
-            >
-              <p className="text-sm text-gray-800 font-medium truncate">
-                {suggestion.document.market_title}
-              </p>
-              <p className="text-xs text-gray-500 mt-1">
-                {suggestion.document.location_address}
-              </p>
-            </button>
-          ))}
-        </div>
-      )}
+  >
+    {suggestions2.map((suggestion: any, index: number) => (
+      <button
+        key={index}
+        onClick={() => handleSuggestionClick(suggestion)}
+        className="w-full px-4 py-3 text-left hover:bg-gray-100 transition-colors duration-150 border-b last:border-b-0"
+      >
+        {apiData.length > 0 && <p className="text-sm text-gray-800 font-medium truncate">Near {apiData[0].name}</p>}
+        <p className="text-sm text-gray-800 font-medium truncate">
+          {suggestion.document.title}
+        </p>
+        <p className="text-xs text-gray-500 mt-1">
+          {suggestion.document.location_address}
+        </p>
+      </button>
+    ))}
+  </div>
+)}
     </div>
   );
 }

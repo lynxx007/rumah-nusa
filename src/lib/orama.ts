@@ -7,6 +7,7 @@ export const db = create({
     image: "string[]",
     price: "number",
     listing_id: "string",
+    location_address: "string",
   },
 });
 async function insertData() {

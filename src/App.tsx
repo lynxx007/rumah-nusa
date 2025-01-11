@@ -39,6 +39,7 @@ function App() {
   const [currentLocation, setCurrentLocation] = useState({ lat: 0, lon: 0 });
   const [mapListingsCurrentPage, setMapListingsCurrentPage] = useState(1);
   const [mapListingsTotalPages, setMapListingsTotalPages] = useState(1);
+  const [searchedLocation, setSearchedLocation] = useState<{lat: number, lon: number} | null>(null);
   const listingsPerMapPage = 12;
 
   const listingsPerPage = 12;
@@ -53,6 +54,16 @@ function App() {
   const [mapZoom, setMapZoom] = useState(16);
 
   const navigate = useNavigate();
+
+  const handleFirstResult = (lat: number, lon: number) => {
+    setSearchedLocation({ lat, lon });
+    if (mapRef.current) {
+      // @ts-ignore
+      mapRef.current.setView([lat, lon], 16);
+      setMapCenter({ lat, lon });
+    }
+  };
+  
 
   const MapEventHandler = useCallback(() => {
     const map = useMapEvents({
@@ -382,13 +393,15 @@ function App() {
     <div className="flex flex-col min-h-screen">
       {
         <Navbar
-          onSearch={setSearchLocation}
-          setListings={setListings}
-          isMapview={isMapView}
-          currentPage={currentPage}
-          listingPerPage={listingsPerPage}
-          setTotalPage={setTotalPages}
-        />
+        onSearch={setSearchLocation}
+        setListings={setListings}
+        isMapview={isMapView}
+        currentPage={currentPage}
+        listingPerPage={listingsPerPage}
+        setTotalPage={setTotalPages}
+        onFirstResult={handleFirstResult}
+        setIsMapView={setIsMapView}
+      />
       }
       <main className="flex-1 p-4 pt-20 pb-20">
         {isMapView ? (
