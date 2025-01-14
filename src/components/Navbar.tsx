@@ -176,6 +176,7 @@ export default function Navbar({
   }, []);
 
   const handleSuggestionClick = (suggestion: any) => {
+    setIsMapView(false);
     navigate(`/listings/${suggestion.document.listing_id}`);
     // setSearchQuery(suggestion.document.title);
     // setShowSuggestions(false);

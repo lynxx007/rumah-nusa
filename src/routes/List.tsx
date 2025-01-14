@@ -55,11 +55,21 @@ export default function List() {
     any[]
   >([]);
     const navigate = useNavigate();
+    const [searchedLocation, setSearchedLocation] = useState<{lat: number, lon: number} | null>(null);
+
   
 
   const listingsPerMapPage = 12;
 
   const listingsPerPage = 12;
+
+  const handleFirstResult = (lat: number, lon: number) => {
+    if (mapRef.current) {
+      console.log(lat, lon);
+      // @ts-ignore
+      mapRef.current.setView([lat, lon], 16);
+    }
+  };
 
   const renderMapPageNumbers = () => {
     const pageNumbers = [];
@@ -374,7 +384,7 @@ export default function List() {
   
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar />
+      <Navbar onFirstResult={handleFirstResult} />
       {data.document !== undefined ? (
         <main className={`flex flex-col p-4 md:p-16 pt-32 pb-20 ${isMapView ? "hidden" : ""}`}>
           <div className="pt-0 md:pt-8 flex w-full items-center justify-end  md:justify-center space-x-4">
