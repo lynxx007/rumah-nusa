@@ -377,10 +377,12 @@ function App() {
             {listing.document.market_title}
           </p>
           <button
-            onClick={() =>
+            onClick={() =>{
+              setIsMapView(false);
               navigate(
                 `/listings/${listing.document.listing_id}`
               )
+            }
             }
             className="mt-2 px-4 py-1 bg-green-500 text-white rounded"
           >
@@ -405,89 +407,116 @@ function App() {
         // setIsMapView={setIsMapView}
       />
       }
-      <main className="flex-1 p-4 pt-20 pb-20">
+      <main className="flex-1 pt-16">
         {isMapView ? (
-          <div className="grid grid-cols-1 md:grid-cols-2">
-            <div className="w-full h-[400px] z-0 md:h-screen">
-              <MapContainer
-                center={[currentLocation.lat, currentLocation.lon]}
-                zoom={10}
-                ref={mapRef}
-                className="w-full h-[400px] md:h-screen"
-              >
-                <MapEventHandler />
-                <TileLayer
-                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                />
-                <MarkerClasterGroup chunkedLoading>
-                {ListingsOnCurrentLocation.length > 0 &&
-                  ListingsOnCurrentLocation.map((listing) => (
-                    <MemoizedMarker
-                    key={listing.id}
-                    listing={listing}
-                    navigate={navigate}
-                  />
-                  ))}
-                  </MarkerClasterGroup>
-              </MapContainer>
-            </div>
-            <div className="flex flex-col">
-              <h2 className="text-2xl font-bold mb-4 pl-4">
-                {ListingsOnCurrentLocation.length} listings found
-              </h2>
-              <div className="p-4 grid grid-cols-2 gap-4">
-                {ListingsOnCurrentLocation.slice(
-                  (mapListingsCurrentPage - 1) * listingsPerMapPage,
-                  mapListingsCurrentPage * listingsPerMapPage
-                ).map((listing) => (
-                  <ListingCard
-                    key={listing.id}
-                    title={listing.document.market_title}
-                    imageUrl={listing.document.images}
-                    location={listing.document.location_address}
-                    price={listing.document.price}
-                    type={listing.document.spec_subtype}
-                    id={listing.document.listing_id}
-                    beds={listing.document.spec_bedroom}
-                    baths={listing.document.spec_bathroom}
-                    width={listing.document.spec_dim_total}
-                    floor={listing.document.spec_floor}
-                    description={listing.document.market_description}
-                  />
-                ))}
-                <div className="flex justify-center items-center space-x-2 mt-4">
-                  <button
-                    onClick={() =>
-                      handleMapPageChange(mapListingsCurrentPage - 1)
-                    }
-                    disabled={mapListingsCurrentPage === 1}
-                    className="px-3 py-1 border rounded-md bg-white text-gray-700 disabled:opacity-50"
-                    aria-label="Go to previous page"
-                  >
-                    <ChevronLeft className="h-5 w-5" />
-                  </button>
-                  {renderMapPageNumbers()}
-                  <button
-                    onClick={() =>
-                      handleMapPageChange(mapListingsCurrentPage + 1)
-                    }
-                    disabled={mapListingsCurrentPage === mapListingsTotalPages}
-                    className="px-3 py-1 border rounded-md bg-white text-gray-700 disabled:opacity-50"
-                    aria-label="Go to next page"
-                  >
-                    <ChevronRight className="h-5 w-5" />
-                  </button>
-                </div>
-                <div className="flex justify-center items-center mt-2 text-sm text-gray-600">
-                  Page {mapListingsCurrentPage} of {mapListingsTotalPages}
-                </div>
-              </div>
-            </div>
-          </div>
+           <div className="relative flex flex-col md:grid md:grid-cols-2">
+           {/* Mobile Map Toggle Button */}
+           <button
+             onClick={() => setIsMapView(!isMapView)}
+             className="fixed bottom-24 left-6 z-50 bg-primary text-white bg-black 
+             rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 
+             flex items-center justify-center p-4 
+             hover:scale-105 active:scale-95"
+             aria-label={isMapView ? "Show Listings" : "Show Map"}
+           >
+             <div className="flex items-center space-x-2">
+               {isMapView ? (
+                 <>
+                   <ListIcon className="h-6 w-6" />
+                   <span className="text-sm font-semibold">Show listings</span>
+                 </>
+               ) : (
+                 <>
+                   <MapIcon className="h-6 w-6" />
+                   <span className="text-sm font-semibold">Show map</span>
+                 </>
+               )}
+             </div>
+           </button>
+
+           {/* Map Container - Fixed on Desktop, Sticky on Mobile */}
+           <div className="h-[300px] md:h-[calc(100vh-64px)] sticky top-16 md:fixed md:right-0 md:w-1/2 z-20">
+             <MapContainer
+               center={[currentLocation.lat, currentLocation.lon]}
+               zoom={10}
+               ref={mapRef}
+               className="w-full h-full"
+             >
+               <MapEventHandler />
+               <TileLayer
+                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+               />
+               <MarkerClasterGroup chunkedLoading>
+                 {ListingsOnCurrentLocation.length > 0 &&
+                   ListingsOnCurrentLocation.map((listing) => (
+                     <MemoizedMarker
+                       key={listing.id}
+                       listing={listing}
+                       navigate={navigate}
+                     />
+                   ))}
+               </MarkerClasterGroup>
+             </MapContainer>
+           </div>
+
+           {/* Listings Section */}
+           <div className="md:h-[calc(100vh-64px)] overflow-y-auto">
+             <div className="p-4">
+               <h2 className="text-2xl font-bold mb-4">
+                 {ListingsOnCurrentLocation.length} listings found
+               </h2>
+               <div className="grid grid-cols-2 gap-4">
+                 {ListingsOnCurrentLocation.slice(
+                   (mapListingsCurrentPage - 1) * listingsPerMapPage,
+                   mapListingsCurrentPage * listingsPerMapPage
+                 ).map((listing) => (
+                   <ListingCard
+                     key={listing.id}
+                     title={listing.document.market_title}
+                     imageUrl={listing.document.images}
+                     location={listing.document.location_address}
+                     price={listing.document.price}
+                     type={listing.document.spec_subtype}
+                     id={listing.document.listing_id}
+                     beds={listing.document.spec_bedroom}
+                     baths={listing.document.spec_bathroom}
+                     width={listing.document.spec_dim_total}
+                     floor={listing.document.spec_floor}
+                     description={listing.document.market_description}
+                   />
+                 ))}
+               </div>
+
+               {/* Pagination Controls */}
+               <div className="flex justify-center items-center space-x-2 mt-4 pb-4">
+                 <button
+                   onClick={() => handleMapPageChange(mapListingsCurrentPage - 1)}
+                   disabled={mapListingsCurrentPage === 1}
+                   className="px-3 py-1 border rounded-md bg-white text-gray-700 disabled:opacity-50"
+                   aria-label="Go to previous page"
+                 >
+                   <ChevronLeft className="h-5 w-5" />
+                 </button>
+                 {renderMapPageNumbers()}
+                 <button
+                   onClick={() => handleMapPageChange(mapListingsCurrentPage + 1)}
+                   disabled={mapListingsCurrentPage === mapListingsTotalPages}
+                   className="px-3 py-1 border rounded-md bg-white text-gray-700 disabled:opacity-50"
+                   aria-label="Go to next page"
+                 >
+                   <ChevronRight className="h-5 w-5" />
+                 </button>
+               </div>
+               <div className="flex justify-center items-center mt-2 text-sm text-gray-600 pb-20 md:pb-4">
+                 Page {mapListingsCurrentPage} of {mapListingsTotalPages}
+               </div>
+             </div>
+           </div>
+         </div>
         ) : listings.length > 0 ? (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8 p-4 pt-8">
               {listings.map((listing) => (
                 <ListingCard
                   key={listing.id}
@@ -527,38 +556,35 @@ function App() {
             <div className="flex justify-center items-center mt-2 text-sm text-gray-600">
               Page {currentPage} of {totalPages}
             </div>
+            <button
+             onClick={() => setIsMapView(!isMapView)}
+             className="fixed bottom-24 left-6 z-50 bg-primary text-white bg-black 
+             rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 
+             flex items-center justify-center p-4 
+             hover:scale-105 active:scale-95"
+             aria-label={isMapView ? "Show Listings" : "Show Map"}
+           >
+             <div className="flex items-center space-x-2">
+               {isMapView ? (
+                 <>
+                   <ListIcon className="h-6 w-6" />
+                   <span className="text-sm font-semibold">Show listings</span>
+                 </>
+               ) : (
+                 <>
+                   <MapIcon className="h-6 w-6" />
+                   <span className="text-sm font-semibold">Show map</span>
+                 </>
+               )}
+             </div>
+           </button>
           </>
         ) : listings.length === 0 ? (
           <div className="flex items-center justify-center h-screen">
             <h2 className="text-2xl font-bold mb-4">No listings found</h2>
           </div>
         ) : null}
-        <button
-          onClick={() => setIsMapView(!isMapView)}
-          className={`fixed bottom-24 md:bottom-6 right-6 z-50 bg-primary text-white bg-black 
-          rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 
-          flex items-center justify-center p-4 
-          hover:scale-105 active:scale-95`}
-          aria-label={isMapView ? "Show Listings" : "Show Map"}
-        >
-          <div className="flex items-center space-x-2">
-            {isMapView ? (
-              <>
-                <ListIcon className="h-6 w-6" />
-                <span className="text-sm font-semibold hidden md:block">
-                  Show listings
-                </span>
-              </>
-            ) : (
-              <>
-                <MapIcon className="h-6 w-6" />
-                <span className="text-sm font-semibold hidden md:block">
-                  Show map
-                </span>
-              </>
-            )}
-          </div>
-        </button>
+
       </main>
       {/* <footer className="md:hidden flex justify-center items-center space-x-16 fixed bottom-0 left-0 w-full bg-white text-center text-red-300 p-4 z-10">
         <a
