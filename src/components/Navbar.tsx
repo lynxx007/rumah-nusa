@@ -6,6 +6,7 @@ import { FaHouse } from "react-icons/fa6";
 import { MdOutlineVilla } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { FcHome } from "react-icons/fc";
+import { useStore } from "../store/store";
 export default function Navbar({
   setListings,
   isMapview,
@@ -13,7 +14,8 @@ export default function Navbar({
   currentPage,
   setTotalPage,
   onFirstResult,
-  setIsMapView
+  // setIsMapView,
+  
 }: {
   onSearch?: any;
   setListings?: any;
@@ -22,11 +24,11 @@ export default function Navbar({
   currentPage?: number;
   setTotalPage?: any;
   onFirstResult?: (lat: number, lng: number) => void;
-  setIsMapView?: (value: boolean) => void;
+  // setIsMapView?: (value: boolean) => void;
 }) {
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
-
+  const {isMapView, setIsMapView} = useStore();
   const [suggestions, setSuggestions] = useState<any[]>([]);
   const [suggestions2, setSuggestions2] = useState<any[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -39,51 +41,58 @@ export default function Navbar({
     
     // const res = await fetch('http://localhost:8000/v1/api/search?searchTerm=' + query);
     // const data = await res.json();
-    const apiRes = await fetch(`https://nominatim.openstreetmap.org/search?q=${query}, Indonesia&format=json`)
+    // const apiRes = await fetch(`https://nominatim.openstreetmap.org/search?q=${query}, Indonesia&format=json`)
+    const apiRes = await fetch(` https://api.locationiq.com/v1/autocomplete?key=${import.meta.env.VITE_LOCATIONIQ_TOKEN}&q=${query}, Indonesia`)
     const apiData = await apiRes.json();
     setApiData(apiData)
+    setShowSuggestions(true)
     console.log(apiData);
     const data = await search(db, {
       term: query,
       limit: listingPerPage,
       properties: ['location_address','market_title']
     });
-    // setLandmarkSuggestion(apiData);
-    setSuggestions(data.hits);
-    setShowSuggestions(true);
-    if (apiData.length === 0){
+    if(data.hits.length === 0){
       return
     }
+    setSuggestions(data.hits);
+    setShowSuggestions2(true)
+    // // setLandmarkSuggestion(apiData);
+    // setSuggestions(data.hits);
+    // setShowSuggestions(true);
+    // if (apiData.length === 0){
+    //   return
+    // }
 
-    const res = await search(db, {
-        limit: 1000,
-        where: {
-          _geoloc: {
-            radius: {
-              coordinates: {
-                lat: Number(apiData[0].lat),
-                lon: Number(apiData[0].lon),
-              },
-              value: 1,
-              unit: "km",
-              inside: true,
-            },
-          }, 
-        },
-      });
-      console.log(res.hits);
-      setSuggestions2(res.hits);
-      setShowSuggestions2(true);
-      setListings(res.hits);
-      setTotalPage(Math.ceil(res.count / listingPerPage));
+    // const res = await search(db, {
+    //     limit: 1000,
+    //     where: {
+    //       _geoloc: {
+    //         radius: {
+    //           coordinates: {
+    //             lat: Number(apiData[0].lat),
+    //             lon: Number(apiData[0].lon),
+    //           },
+    //           value: 1,
+    //           unit: "km",
+    //           inside: true,
+    //         },
+    //       }, 
+    //     },
+    //   });
+    //   console.log(res.hits);
+    //   setSuggestions2(res.hits);
+    //   setShowSuggestions2(true);
+    //   setListings(res.hits);
+    //   setTotalPage(Math.ceil(res.count / listingPerPage));
    
-    if (res.hits.length > 0 && res.hits[0].document._geoloc) {
-      // Center map on first result
-      onFirstResult?.(
-        res.hits[0].document._geoloc.lat,
-        res.hits[0].document._geoloc.lon
-      );
-    }
+    // if (res.hits.length > 0 && res.hits[0].document._geoloc) {
+    //   // Center map on first result
+    //   onFirstResult?.(
+    //     res.hits[0].document._geoloc.lat,
+    //     res.hits[0].document._geoloc.lon
+    //   );
+    // }
 
     // setListings(data.hits);
     // setTotalPage(Math.ceil(data.count / listingPerPage));
@@ -205,6 +214,7 @@ export default function Navbar({
               className="outline-none bg-transparent w-full text-sm"
               autoFocus={false}
               onFocus={()=>{
+                console.log("focus")
                 setIsMapView(true)
               }}
               // onKeyDown={(e) => {
@@ -236,27 +246,53 @@ export default function Navbar({
         </div>
       </nav>
 
-      {showSuggestions && suggestions.length > 0 && (
-  <div className="absolute top-12 left-1/2 transform -translate-x-1/2 w-[400px] max-h-[150px] overflow-y-auto bg-white rounded-lg shadow-2xl z-[1000] mt-2 border">
-    {suggestions.map((suggestion: any, index: number) => (
-      <button
-        key={index}
-        className="w-full px-4 py-3 text-left hover:bg-gray-100 transition-colors duration-150 border-b last:border-b-0"
-        onClick={() => handleSuggestionClick(suggestion)}
-      >
-        <p className="text-sm text-gray-800 font-medium truncate">
-          {suggestion.document.market_title}
-        </p>
-        <p className="text-xs text-gray-500 mt-1">
-          {suggestion.document.location_address}
-        </p>
-      </button>
-    ))}
-  </div>
-)}
+      <div
+  className={`absolute ${
+    showSuggestions && (apiData.length === 0 || suggestions.length === 0)
+      ? "top-10"
+      : "top-14"
+  } left-1/2 transform -translate-x-1/2 w-[400px] z-[1000] mt-2`}
+>
+  {/* Location Suggestions */}
+  {showSuggestions && apiData.length > 0 && (
+    <div className="bg-white rounded-lg shadow-2xl border mb-2 max-h-[150px] overflow-y-auto">
+      {apiData.map((data, index) => (
+        <button
+          key={index}
+          onClick={() => onFirstResult(data.lat, data.lon)}
+          className="w-full px-4 py-3 text-left hover:bg-gray-100 transition-colors duration-150 border-b last:border-b-0"
+        >
+          <p className="text-sm text-gray-800 font-medium truncate">
+            {data.address.name}, {data.address.city}, {data.address.country}
+          </p>
+        </button>
+      ))}
+    </div>
+  )}
+
+  {/* Property Suggestions */}
+  {showSuggestions && suggestions.length > 0 && (
+    <div className="bg-white rounded-lg shadow-2xl border max-h-[150px] overflow-y-auto">
+      {suggestions.map((suggestion, index) => (
+        <button
+          key={index}
+          className="w-full px-4 py-3 text-left hover:bg-gray-100 transition-colors duration-150 border-b last:border-b-0"
+          onClick={() => handleSuggestionClick(suggestion)}
+        >
+          <p className="text-sm text-gray-800 font-medium truncate">
+            {suggestion.document.market_title}
+          </p>
+          <p className="text-xs text-gray-500 mt-1">
+            {suggestion.document.location_address}
+          </p>
+        </button>
+      ))}
+    </div>
+  )}
+</div>
 
 {/* Suggestions dropdown */}
-{showSuggestions2 && suggestions2.length > 0 && (
+{/* {showSuggestions2 && suggestions2.length > 0 && (
   <div
     className="absolute top-52 left-1/2 transform -translate-x-1/2 w-[400px] max-h-[300px] 
     overflow-y-auto bg-white rounded-lg shadow-2xl z-[1000] mt-2 border"
@@ -277,7 +313,7 @@ export default function Navbar({
       </button>
     ))}
   </div>
-)}
+)} */}
     </div>
   );
 }

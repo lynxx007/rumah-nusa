@@ -23,6 +23,7 @@ import {
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { useNavigate } from "react-router-dom";
+import { useStore } from "./store/store";
 
 const cache: { [key: string]: any } = {}
 function App() {
@@ -44,7 +45,8 @@ function App() {
 
   const listingsPerPage = 12;
 
-  const [isMapView, setIsMapView] = useState(false);
+  // const [isMapView, setIsMapView] = useState(false);
+  const { isMapView, setIsMapView } = useStore()
   const mapRef = useRef(null);
 
   const [mapCenter, setMapCenter] = useState<{ lat: number; lon: number }>({
@@ -400,7 +402,7 @@ function App() {
         listingPerPage={listingsPerPage}
         setTotalPage={setTotalPages}
         onFirstResult={handleFirstResult}
-        setIsMapView={setIsMapView}
+        // setIsMapView={setIsMapView}
       />
       }
       <main className="flex-1 p-4 pt-20 pb-20">
@@ -532,7 +534,7 @@ function App() {
           </div>
         ) : null}
         <button
-          onClick={() => setIsMapView(!isMapView)}
+          onClick={() => setIsMapView(true)}
           className={`fixed bottom-24 md:bottom-6 right-6 z-50 bg-primary text-white bg-black 
           rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 
           flex items-center justify-center p-4 
