@@ -534,7 +534,7 @@ function App() {
           </div>
         ) : null}
         <button
-          onClick={() => setIsMapView(true)}
+          onClick={() => setIsMapView(!isMapView)}
           className={`fixed bottom-24 md:bottom-6 right-6 z-50 bg-primary text-white bg-black 
           rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 
           flex items-center justify-center p-4 
