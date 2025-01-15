@@ -265,7 +265,11 @@ export default function Navbar({
                 >
                   <MapPin />
                   <p className="text-sm text-gray-800 font-medium truncate">
-                    {data.address.name}, {data.address.city}, {data.address.country}
+                  {data.address.name && <span>{data.address.name}</span>}
+                  {data.address.name && data.address.city && <span>, </span>}
+                  {data.address.city && <span>{data.address.city}</span>}
+                  {(data.address.name || data.address.city) && data.address.country && <span>, </span>}
+                  {data.address.country && <span>{data.address.country}</span>}
                   </p>
                 </button>
               ))}
