@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Globe, Menu, Search, UserCircle } from "lucide-react";
+import { Globe, House, MapPin, Menu, Search, UserCircle } from "lucide-react";
 import { search } from "@orama/orama";
 import { db } from "../lib/orama";
 import { FaHouse } from "react-icons/fa6";
@@ -248,49 +248,55 @@ export default function Navbar({
       </nav>
 
       <div
-  className={`absolute ${
-    showSuggestions && (apiData.length === 0 || suggestions.length === 0)
-      ? "top-10"
-      : "top-14"
-  } left-1/2 transform -translate-x-1/2 w-[400px] z-[1000] mt-2`}
->
-  {/* Location Suggestions */}
-  {showSuggestions && apiData.length > 0 && (
-    <div className="bg-white rounded-lg shadow-2xl border mb-2 max-h-[150px] overflow-y-auto">
-      {apiData.map((data, index) => (
-        <button
-          key={index}
-          onClick={() => onFirstResult(data.lat, data.lon)}
-          className="w-full px-4 py-3 text-left hover:bg-gray-100 transition-colors duration-150 border-b last:border-b-0"
+        className={`absolute ${
+          showSuggestions && (apiData.length === 0 || suggestions.length === 0)
+            ? "top-10"
+            : "top-14"
+        } left-1/2 transform -translate-x-1/2 w-[500px] z-[1000] mt-2`}
         >
-          <p className="text-sm text-gray-800 font-medium truncate">
-            {data.address.name}, {data.address.city}, {data.address.country}
-          </p>
-        </button>
-      ))}
-    </div>
-  )}
-
-  {/* Property Suggestions */}
-  {showSuggestions && suggestions.length > 0 && (
-    <div className="bg-white rounded-lg shadow-2xl border max-h-[150px] overflow-y-auto">
-      {suggestions.map((suggestion, index) => (
-        <button
-          key={index}
-          className="w-full px-4 py-3 text-left hover:bg-gray-100 transition-colors duration-150 border-b last:border-b-0"
-          onClick={() => handleSuggestionClick(suggestion)}
-        >
-          <p className="text-sm text-gray-800 font-medium truncate">
-            {suggestion.document.market_title}
-          </p>
-          <p className="text-xs text-gray-500 mt-1">
-            {suggestion.document.location_address}
-          </p>
-        </button>
-      ))}
-    </div>
-  )}
-</div>
+          {/* Location Suggestions */}
+          {showSuggestions && (
+            <div className="bg-white rounded-lg shadow-2xl border mb-2 max-h-[200px] overflow-y-auto">
+              {apiData.length > 0 && apiData.map((data, index) => (
+                <button
+                  key={index}
+                  onClick={() => onFirstResult(data.lat, data.lon)}
+                  className="w-full flex items-center space-x-2 px-4 py-3 text-left hover:bg-gray-100 transition-colors duration-150 border-b last:border-b-0"
+                >
+                  <MapPin />
+                  <p className="text-sm text-gray-800 font-medium truncate">
+                    {data.address.name}, {data.address.city}, {data.address.country}
+                  </p>
+                </button>
+              ))}
+              {suggestions.length > 0 && suggestions.map((suggestion, index) => (
+                <button
+                  key={index}
+                  className="flex space-x-2 w-full px-4 py-3 text-left hover:bg-gray-100 transition-colors duration-150 border-b last:border-b-0"
+                  onClick={() => handleSuggestionClick(suggestion)}
+                >
+                  <House />
+                  <div>
+                    <p className="text-sm text-gray-800 font-medium truncate">
+                      {suggestion.document.market_title}
+                    </p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      {suggestion.document.location_address}
+                    </p>
+                  </div>
+                  
+                </button>
+              ))}
+            </div>
+          )}
+        
+          {/* Property Suggestions
+          {showSuggestions && suggestions.length > 0 && (
+            <div className="bg-white rounded-lg shadow-2xl border max-h-[150px] overflow-y-auto">
+              
+            </div>
+          )} */}
+      </div>
 
 {/* Suggestions dropdown */}
 {/* {showSuggestions2 && suggestions2.length > 0 && (
